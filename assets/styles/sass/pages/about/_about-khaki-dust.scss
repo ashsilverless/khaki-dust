@@ -1,0 +1,32 @@
+/* ~~~~~~~~~~ About -> About Khaki & Dust ~~~~~~~~~~ */
+
+.template-about-khaki-dust {
+
+    .people {
+        .single-man {
+            &__position {
+                color: $element__green;
+                font-size: 16px;
+                line-height: 22px;
+
+                @media (max-width: 1199px) {
+                    font-size: 15px;
+                    line-height: 21px;
+                }
+
+                @media (max-width: 991px) {
+                    font-size: 14px;
+                    line-height: 20px;
+                }
+            }
+
+            &__content {
+                text-align: left;
+                margin-top: 35px;
+                font-size: 18px;
+                line-height: 27px;
+            }
+        }
+    }
+
+}

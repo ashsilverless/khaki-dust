@@ -1,0 +1,16 @@
+
+/* ~~~~~~~~~~ Search results ~~~~~~~~~~ */
+
+.search-results {
+
+	.search-result {
+		a {
+			color: $element__green;
+		}
+
+		&__learn-more {
+			margin-top: 25px;
+			display: block;
+		}
+	}
+}

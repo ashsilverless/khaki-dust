@@ -1,0 +1,17 @@
+/* ~~~~~~~~~~ About -> About Your Safari ~~~~~~~~~~ */
+
+.template-about-your-safari {
+
+    .feature {
+        border-bottom: 4px solid #ededed;
+
+        &__title {
+            margin: 0;
+            text-align: center;
+            color: $element__green;
+            @extend h3;
+            @include lato('normal');
+        }
+    }
+
+}

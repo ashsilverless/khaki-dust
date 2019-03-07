@@ -1,0 +1,24 @@
+/* ~~~~~~~~~~ Fonts ~~~~~~~~~~ */
+
+@font-face {
+    font-family: 'Glyphicons Halflings';
+    src: url('../fonts/glyphicons-halflings-regular.eot');
+    src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/glyphicons-halflings-regular.woff') format('woff'),
+         url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'),
+         url('../fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
+}
+
+@mixin lato($fontName) {
+    @if $fontName == "light" {
+        font-weight: 300;
+    } @elseif $fontName == "normal" {
+        font-weight: 400;
+    } @elseif $fontName == "bold" {
+        font-weight: 700;
+    } @elseif $fontName == "black" {
+        font-weight: 900;
+    }
+    font-family: 'Lato', sans-serif;
+    font-style: normal;
+}

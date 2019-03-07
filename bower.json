@@ -1,0 +1,31 @@
+{
+  "name": "gulp-bower-webapp",
+  "description": "Generator by Dawid Stasiak (http://dawidstasiak.pl/en)",
+  "main": "index.php",
+  "authors": [
+    "Dawid Stasiak (http://dawidstasiak.pl/en)"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "keyword"
+  ],
+  "homepage": "http://dawidstasiak.pl/en",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-sass": "^3.3.6",
+    "modernizr": "^3.3.1",
+    "animate.css": "git://github.com/daneden/animate.css.git#^3.5.1",
+    "wow": "git://github.com/matthieua/WOW.git#^1.1.2",
+    "font-awesome": "^4.6.3",
+    "jquery.easing": "^1.3.1",
+    "mixitup": "https://github.com/patrickkunka/mixitup.git#^2.1.11",
+    "matchHeight": "matchheight#^0.7.0",
+    "fancybox": "https://github.com/fancyapps/fancybox.git#^3.0.47"
+  }
+}
