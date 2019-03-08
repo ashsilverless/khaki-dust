@@ -206,4 +206,42 @@ function custom_pagination() {
         }
 }
 
+
+/**
+* Add the images to the submenu -> the submenu items with the parent with 'pt-special-dropdown' class.
+*
+* @param array $items List of menu objects (WP_Post).
+* @param array $args  Array of menu settings.
+* @return array
+*/
+function add_images_to_submenu( $items ) {
+	$special_menu_parent_ids = array();
+
+	foreach ( $items as $item ) {
+		if ( in_array( 'pt-special-dropdown', $item->classes, true ) && isset( $item->ID ) ) {
+			$special_menu_parent_ids[] = $item->ID;
+		}
+
+		if ( in_array( $item->menu_item_parent, $special_menu_parent_ids ) && has_post_thumbnail( $item->object_id ) ) {
+    			$item->title = sprintf(
+				'<span>%2$s</span> %1$s ',
+				get_the_post_thumbnail( $item->object_id, 'thumbnail' ),
+				$item->title 
+			);
+		}
+	}
+
+	return $items;
+}
+
+add_filter( 'wp_nav_menu_objects', 'add_images_to_submenu' );
+
+
+
+
+
+
+
+
+
 ?>
