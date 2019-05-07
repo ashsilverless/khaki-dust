@@ -42,7 +42,7 @@
             	</section><!-- /.who-we-are section-paddings--both text-center -->
 
 
-                <?php $destinations_countries_terms = get_terms( 'destinations_countries' ); ?>
+                <?php $destinations_countries_terms = get_terms( 'countries' ); ?>
                 <?php $term_row = 0; ?>
 
                 <?php foreach ( $destinations_countries_terms as $destinations_countries_term ): ?>
@@ -51,7 +51,7 @@
                             'post_type' => 'destinations_archive',
                             'tax_query' => array(
                                 array(
-                                    'taxonomy' => 'destinations_countries',
+                                    'taxonomy' => 'countries',
                                     'field' => 'slug',
                                     'terms' => array( $destinations_countries_term->slug ),
                                     'operator' => 'IN'

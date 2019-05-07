@@ -1,5 +1,5 @@
 <?php   // Get terms for post
- $terms = get_the_terms( $post->ID , 'destinations_countries' );
+ $terms = get_the_terms( $post->ID , 'countries' );
  // Loop over each item since it's an array
  if ( $terms != null ){
  foreach( $terms as $term ) {

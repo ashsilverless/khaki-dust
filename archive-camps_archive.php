@@ -9,8 +9,7 @@
         <div class="row">
             <div class="col-xs-12">
 
-                <?php $camps_countries_terms = get_terms( 'destinations_countries' ); ?>
-                <?php $camps_countries_camps_terms = get_terms( 'camps_countries' ) ?>
+                <?php $camps_countries_terms = get_terms( 'countries' ); ?>
 
                 <?php if($camps_countries_terms): ?>
 
@@ -46,7 +45,7 @@
                                                         'post_type' => 'destinations_archive',
                                                         'tax_query' => array(
                                                             array(
-                                                                'taxonomy' => 'destinations_countries',
+                                                                'taxonomy' => 'countries',
                                                                 'field' => 'slug',
                                                                 'terms' => array( $camps_countries_term->slug ),
                                                                 'operator' => 'IN'
@@ -79,7 +78,7 @@
                                                         'post_type' => 'camps_archive',
                                                         'tax_query' => array(
                                                             array(
-                                                                'taxonomy' => 'camps_countries',
+                                                                'taxonomy' => 'countries',
                                                                 'field' => 'slug',
                                                                 'terms' => array( $camps_countries_term->slug ),
                                                                 'operator' => 'IN'

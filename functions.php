@@ -83,65 +83,266 @@ function mysite_opengraph_content($val) {
 
 /* ~~~~~~~~~~ Display all of posts from custom post type in top navbar ~~~~~~~~~~ */
 
-add_filter( 'wp_get_nav_menu_items', 'cpt_archive_menu_filter', 10, 3 );
-function cpt_archive_menu_filter( $items, $menu, $args ) {
-	/* alter the URL for cpt-archive objects */
+add_filter( 'wp_get_nav_menu_items', 'cpt_archive_menu_filter', 10, 2 );
 
-	$menu_order = count($items); /* Offset menu order */
+function cpt_archive_menu_filter( $items, $args ) {
 
 	$child_items = array();
-	foreach ( $items as &$item ) {
-	    if ( $item->title != '##activities##' && $item->title != '##destinations##' && $item->title != '##camps##') continue;
-
-		if($item->title == '##activities##') {
-			$item->url = get_post_type_archive_link('activities_archive');
-		    $item->title = 'Activities';
-
-		    foreach ( get_posts( 'post_type=activities_archive&numberposts=-1' ) as $post ) {
-		        $post->menu_item_parent = $item->ID;
-		        $post->post_type = 'nav_menu_item';
-		        $post->object = 'custom';
-		        $post->type = 'custom';
-		        $post->menu_order = ++$menu_order;
-		        $post->title = $post->post_title;
-		        $post->url = get_permalink( $post->ID );
-		        /* add children */
-		        $child_items []= $post;
+	
+	$number = 1000000;
+	
+	$main_menu = array_filter($items, function ($item) {
+	    return ($item->menu_item_parent == '0');
+	});
+	
+	foreach($main_menu as $item_menu) {
+		
+		if($item_menu->post_name != "camps" && $item_menu->post_name != "activities" && $item_menu->post_name != "destinations") {
+			$id = $item_menu->ID;
+			
+			$children = array_filter($items, function ($item) use ($id) {
+			    return ($item->menu_item_parent == $id);
+			});
+			
+			if(sizeof($children) > 0) {
+				$index = findMenu($main_menu, $item_menu->ID);
+				array_splice($main_menu, $index, 0, $children);
+			}
+			
+		} else if($item_menu->post_name == "activities") {
+			$args = array(
+		        'post_type'   => 'activities_archive',
+		        'post_status' => 'published',
+		        'orderby'     => 'title',
+		        'order'       => 'ASC'	
+		    );
+		    
+		    $order = 1;
+			
+			remove_all_filters('posts_orderby');
+			
+		    $query = new WP_Query($args);
+		    
+		    $posts = $query->get_posts();
+		    
+		    if(sizeof($posts) > 0) {
+			    
+			    foreach ($posts as $post) {
+				    $post->menu_item_parent = $item_menu->ID;
+				    $post->post_type        = 'nav_menu_item';
+			        $post->object           = 'custom';
+			        $post->type             = 'custom';
+			        $post->title            = $post->post_title;
+			        $post->url              = get_permalink($post->ID);
+			        $post->object_id        = $post->ID;
+			    }
+			    
+			    $index = findMenu($main_menu, $item_menu->ID);
+				array_splice($main_menu, $index, 0, $posts);
 		    }
-		} elseif ($item->title == '##destinations##') {
-			$item->url = get_post_type_archive_link('destinations_archive');
-		    $item->title = 'Destinations';
-
-		    foreach ( get_posts( 'post_type=destinations_archive&numberposts=-1' ) as $post ) {
-		        $post->menu_item_parent = $item->ID;
-		        $post->post_type = 'nav_menu_item';
-		        $post->object = 'custom';
-		        $post->type = 'custom';
-		        $post->menu_order = ++$menu_order;
-		        $post->title = $post->post_title;
-		        $post->url = get_permalink( $post->ID );
-		        /* add children */
-		        $child_items []= $post;
-		    }
-		} else {
-			$item->url = get_post_type_archive_link('camps_archive');
-		    $item->title = 'Camps';
-
-		    foreach ( get_posts( 'post_type=camps_archive&numberposts=-1' ) as $post ) {
-		        $post->menu_item_parent = $item->ID;
-		        $post->post_type = 'nav_menu_item';
-		        $post->object = 'custom';
-		        $post->type = 'custom';
-		        $post->menu_order = ++$menu_order;
-		        $post->title = $post->post_title;
-		        $post->url = get_permalink( $post->ID );
-		        /* add children */
-		        $child_items []= $post;
-		    }
+		} else if($item_menu->post_name == "destinations") {
+			
+			$terms = get_terms('countries');
+			
+			$children = array();
+			
+			foreach($terms as $term) {
+				
+		        $subitem = (object)array(
+	                'ID'                => $number,
+	                'db_id'             => $number,
+	                'title'             => $term->name,
+	                'url'               => '#',
+	                'menu_item_parent'  => $item_menu->ID,
+	                'type'              => '',
+	                'object'            => '',
+	                'object_id'         => '',
+	                'classes'           => array("pt-special-dropdown")
+	            );
+		        
+		        array_push($children, $subitem);
+		        
+		        $number++;
+		        
+		        $args = array(
+			        'post_type'   => 'destinations_archive',
+			        'post_status' => 'publish',
+			        'orderby'     => 'title',
+			        'order'       => 'ASC',
+			        'tax_query' => array(
+						array(
+							'taxonomy' => 'countries',
+							'field'    => 'slug',
+							'terms'    => $term->slug,
+						)
+					)
+			    );
+			    
+			    remove_all_filters('posts_orderby');
+			    
+			    $query = new WP_Query($args);
+		    
+				$posts = $query->get_posts();
+				
+				if(sizeof($posts) > 0) {
+			    
+				    foreach ($posts as $post) {
+				        
+				        $child_item = (object)array(
+			                'ID'                => $number++,
+			                'title'             => $post->post_title,
+			                'url'               => get_permalink($post->ID),
+			                'menu_item_parent'  => $subitem->ID,
+			                'type'              => '',
+			                'object'            => '',
+			                'object_id'         => $post->ID,
+			                'db_id'             => ''
+			            );
+				        
+				        array_push($children, $child_item);
+				    }
+				    
+			    }
+			}
+			
+			$index = findMenu($main_menu, $item_menu->ID);
+			array_splice($main_menu, $index, 0, $children);
+			
+		} else if($item_menu->post_name == "camps") {
+			
+			$terms = get_terms('countries');
+			
+			$children = array();
+			
+			foreach($terms as $term) {
+				
+		        $subitem = (object)array(
+	                'ID'                => $number,
+	                'db_id'             => $number,
+	                'title'             => $term->name,
+	                'url'               => '#',
+	                'menu_item_parent'  => $item_menu->ID,
+	                'type'              => '',
+	                'object'            => '',
+	                'object_id'         => ''
+	            );
+		        
+		        array_push($children, $subitem);
+		        
+		        $number++;
+		        
+		        $args = array(
+			        'post_type'   => 'destinations_archive',
+			        'post_status' => 'publish',
+			        'orderby'     => 'title',
+			        'order'       => 'ASC',
+			        'tax_query' => array(
+						array(
+							'taxonomy' => 'countries',
+							'field'    => 'slug',
+							'terms'    => $term->slug,
+						)
+					)
+			    );
+			    
+			    remove_all_filters('posts_orderby');
+			    
+			    $query = new WP_Query($args);
+		    
+				$destinations = $query->get_posts();
+				
+				if(sizeof($destinations) > 0) {
+			    
+				    foreach ($destinations as $destination) {
+				        
+				        $dest_item = (object)array(
+			                'ID'                => $number,
+			                'db_id'             => $number,
+			                'title'             => $destination->post_title,
+			                'url'               => get_permalink($destination->ID),
+			                'menu_item_parent'  => $subitem->ID,
+			                'type'              => '',
+			                'object'            => '',
+			                'object_id'         => $destination->ID,
+			                'classes'           => array("pt-special-dropdown")
+			            );
+				        
+				        $args = array(
+					        'post_type'   => 'camps_archive',
+					        'post_status' => 'publish',
+					        'orderby'     => 'title',
+					        'order'       => 'ASC',
+					        'meta_key'    => 'relational_destination',
+							'meta_value'  => $destination->ID,
+					        'tax_query'   => array(
+								array(
+									'taxonomy' => 'countries',
+									'field'    => 'slug',
+									'terms'    => $term->slug,
+								)
+							)
+					    );
+					    
+					    remove_all_filters('posts_orderby');
+					    
+					    $query = new WP_Query($args);
+				    
+						$camps = $query->get_posts();
+						
+						if(sizeof($camps) > 0) {
+							
+							array_push($children, $dest_item);
+				        
+							$number++;
+					    
+						    foreach ($camps as $camp) {
+							    						        
+						        $child_item = (object)array(
+					                'ID'                => $number++,
+					                'title'             => $camp->post_title,
+					                'url'               => get_permalink($camp->ID),
+					                'menu_item_parent'  => $dest_item->ID,
+					                'type'              => '',
+					                'object'            => '',
+					                'object_id'         => $camp->ID,
+					                'db_id'             => ''
+					            );
+						        
+						        array_push($children, $child_item);
+						    }
+						    
+					    }
+				    }
+				    
+			    }
+			}
+			
+			$index = findMenu($main_menu, $item_menu->ID);
+			array_splice($main_menu, $index, 0, $children);
+			
 		}
-
 	}
-	return array_merge( $items, $child_items );
+	
+	$menu_order = 0;
+	
+	foreach($main_menu as $item) {
+		$item->menu_order = ++$menu_order;
+	}
+	
+	return  $main_menu;
+	
+}
+
+function findMenu($menu, $id) {
+	$count = 0;
+	foreach($menu AS $item){
+		$count++;
+		
+		if($item->ID == $id){
+			return $count;
+		}
+	}
+	return $count;
 }
 
 
@@ -236,9 +437,14 @@ function add_images_to_submenu( $items ) {
 
 add_filter( 'wp_nav_menu_objects', 'add_images_to_submenu' );
 
-
-
-
+/**
+* Remove  post type from url.
+*/
+add_filter('bcn_add_post_type_arg', 'my_add_post_type_arg_filt', 10, 3);
+function my_add_post_type_arg_filt($add_query_arg, $type, $taxonomy)
+{
+    return false;
+}
 
 
 

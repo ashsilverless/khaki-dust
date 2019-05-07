@@ -93,6 +93,14 @@ $(document).ready(function() {
                     }
                 });
             }
+        } else if (target === '#collapse-tab-2') {
+            if (!$('#collapse-tab-2').mixItUp('isLoaded')) {
+                $('#collapse-tab-2').mixItUp({
+                    selectors: {
+                        filter: '.filter-2'
+                    }
+                });
+            }
         }
     });
 });
@@ -102,6 +110,18 @@ $(document).ready(function() {
         selectors: {
             filter: '.filter-0'
         }
+    });
+});
+
+$(document).ready(function() {
+    $('.mix-it-up__controls button').each(function() {
+	    var destination = $(this).attr("data-filter");
+	    if(destination != "all") {
+		    var camps = $('.mix-it-up__container div' + destination);
+		    if(camps.length == 0) {
+			    $(this).hide();
+		    }
+		}
     });
 });
 

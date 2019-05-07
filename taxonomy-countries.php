@@ -31,9 +31,9 @@
                 
                 <?php };?>
 
-                <?php $destinations_countries_terms = get_terms( 'destinations_countries' ); ?>
+                <?php $destinations_countries_terms = get_terms( 'countries' ); ?>
 
-                    <section id="destinations" class="destinations text-center <?php if (in_array('tax-destinations_countries',$classes)) {echo 'country-page';};?>">
+                    <section id="destinations" class="destinations text-center <?php if (in_array('tax-countries',$classes)) {echo 'country-page';};?>">
             			<div class="row">
             				<div class="col-xs-12">
 
@@ -41,7 +41,7 @@
 
 <?php 
 
-    $terms = wp_get_post_terms( $post->ID, 'destinations_countries'); 
+    $terms = wp_get_post_terms( $post->ID, 'countries'); 
     $terms_ids = [];
 
     foreach ( $terms as $term ) {
@@ -53,7 +53,7 @@
         'tax_query' => array(
             'relation' => 'AND',
             array(
-                'taxonomy' => 'destinations_countries',
+                'taxonomy' => 'countries',
                 'field'    => 'term_id',
                 'terms'    => $terms_ids
             )

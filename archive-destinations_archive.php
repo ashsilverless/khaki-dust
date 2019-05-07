@@ -9,16 +9,16 @@
         <div class="row">
             <div class="col-xs-12">
 
-                <?php $destinations_countries_terms = get_terms( 'destinations_countries' ); ?>
-                <?php foreach ( $destinations_countries_terms as $destinations_countries_term ): ?>
+                <?php $countries_terms = get_terms( 'countries' ); ?>
+                <?php foreach ( $countries_terms as $country_term ): ?>
                     <?php
                         $loop = new WP_Query( array(
                             'post_type' => 'destinations_archive',
                             'tax_query' => array(
                                 array(
-                                    'taxonomy' => 'destinations_countries',
+                                    'taxonomy' => 'countries',
                                     'field' => 'slug',
-                                    'terms' => array( $destinations_countries_term->slug ),
+                                    'terms' => array( $country_term->slug ),
                                     'operator' => 'IN'
                                 )
                             )
@@ -28,7 +28,7 @@
                     <section class="destinations section-paddings--both text-center">
             			<div class="row">
             				<div class="col-xs-12">
-            					<h2 class="bordered-title bordered-title--black"><?php echo $destinations_countries_term->name; ?></h2><!-- /.bordered-title bordered-title--black -->
+            					<h2 class="bordered-title bordered-title--black"><?php echo $country_term->name; ?></h2><!-- /.bordered-title bordered-title--black -->
             					<div class="destinations-gallery">
             						<div class="row">
 
