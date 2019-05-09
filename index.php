@@ -64,18 +64,8 @@
             			<div class="row">
             				<div class="col-xs-12">
 
-                                <?php if($term_row != 0): ?>
+                				<div class="section-paddings--bottom">
 
-                                    <button class="khaki-dust-button khaki-dust-button__bordered-arrow section-paddings--bottom" type="button" data-toggle="collapse" data-target="#collapseBeyondBotswana" aria-expanded="false" aria-controls="collapseBeyondBotswana">
-                					  	<?php echo $destinations_countries_term->name; ?>
-                						<div class="arrow-wrapper">
-                							<img src="<?php echo get_template_directory_uri(); ?>/images/icon__arrow--down.svg" alt="Arrow icon" />
-                						</div><!-- /.arrow-wrapper -->
-                					</button>
-
-                					<div id="collapseBeyondBotswana" class="collapse section-paddings--bottom">
-
-                                <?php endif; ?>
 
             						<h2 class="bordered-title bordered-title--black"><?php echo $destinations_countries_term->name; ?></h2><!-- /.bordered-title bordered-title--black -->
 
@@ -142,10 +132,7 @@
                     						</div><!-- /.destinations-gallery -->
 
                                         <?php endif; ?>
-
-                                    <?php if($term_row != 0): ?>
-                                        </div>
-                                    <?php endif; ?>
+                                    </div>
 
                                 </div><!-- /.col-xs-12 -->
                 			</div><!-- /.row -->
